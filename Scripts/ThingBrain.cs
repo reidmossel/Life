@@ -5,16 +5,22 @@ using UnityEngine;
 public class ThingBrain : MonoBehaviour
 {
 
-    [SerializeField] private float maxSpeed = 3f;
+    [SerializeField] private float maxSpeed = 10f;
+
     // [SerializeField] private float hunger = 40f;
 
-    // public GameObject sight;
-    // public GameObject smell;
     private Rigidbody2D rb;
+    private Vector3 direction;
+    public Vector3 target;
+    private bool detectFood = false;
+    private bool detectThing = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        InvokeRepeating("ChangeDirection", 0.1f, 10f);
+        
     }
 
     void Update()
@@ -24,22 +30,39 @@ public class ThingBrain : MonoBehaviour
 
     void FixedUpdate() 
     {
-        // Make this random
-        rb.velocity = (Vector2.up * Time.deltaTime * maxSpeed);
+
+        transform.up = target - transform.position;
+        rb.velocity = (transform.up * Time.deltaTime * maxSpeed);
+
+    }
+
+    private void ChangeDirection()
+    {
+        if (!detectFood && !detectThing)
+        {
+            target = new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), 0);
+        }
     }
 
 
     // Line of Sight detections:
 
-    public void SawFood()
+    public void SawFood(Vector3 foodLocation)
     {
         Debug.Log("saw food");
-        // Go towards or away from the thing
+        detectFood = true;
+        // Go towards food
+        // Need to make it so they turn towards the food
+        target = foodLocation;
+        Debug.Log("Going towards food!");
+        
     }
 
     public void SawThing()
     {
         Debug.Log("saw thing");
+        detectThing = true;
+        // go away from food
     }
 
 
