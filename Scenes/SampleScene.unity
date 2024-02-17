@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d4ee2a3eafdcf04c8a588419c7e2322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnAmount: 1
+  spawnAmount: 10
   prefabs:
   - {fileID: 5322692223096856034, guid: d057d16b0215ec44e894d85916dea8b8, type: 3}
   - {fileID: 3800377405266085132, guid: 83924034789bebb4b99fe3cef22ed435, type: 3}

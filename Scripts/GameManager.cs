@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
 
     private float radius = 10f;
-    [SerializeField] private int spawnAmount = 1;
+    [SerializeField] private int spawnAmount = 10;
     // Get references to prefabs
     // public GameObject thingPrefab;
     // public GameObject pelletPrefab;

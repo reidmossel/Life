@@ -6,8 +6,9 @@ public class ThingBrain : MonoBehaviour
 {
 
     [SerializeField] private float maxSpeed = 10f;
-
-    // [SerializeField] private float hunger = 40f;
+    [SerializeField] private float health = 100f;
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private float hunger = 40f;
 
     private Rigidbody2D rb;
     private Vector3 direction;
@@ -20,20 +21,27 @@ public class ThingBrain : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         InvokeRepeating("ChangeDirection", 0.1f, 10f);
+        InvokeRepeating("Hunger", 0.1f, 3f);
         
     }
 
     void Update()
     {
+        if (health <= 0)
+        {
+            Death();
+        }
 
+        if(transform.position == target)
+        {
+            ChangeDirection();
+        }
     }
 
     void FixedUpdate() 
     {
-
         transform.up = target - transform.position;
         rb.velocity = (transform.up * Time.deltaTime * maxSpeed);
-
     }
 
     private void ChangeDirection()
@@ -44,6 +52,38 @@ public class ThingBrain : MonoBehaviour
         }
     }
 
+    // Health
+
+    private void Hunger()
+    {
+        hunger = hunger - 1;
+
+        if(hunger <= 0)
+        {
+            Debug.Log("I'm starving!");
+            Hurt(2);
+        }
+        if(hunger >= 10 && health < maxHealth)
+        {
+            Heal(5);
+        }
+    }
+
+    public void Hurt(int damage)
+    {
+        health = health - damage;
+    }
+
+    public void Heal(int heal)
+    {
+        health = health + heal;
+    }
+
+    private void Death()
+    {
+        Debug.Log("I died!");
+        Destroy(gameObject);
+    }
 
     // Line of Sight detections:
 
@@ -51,8 +91,6 @@ public class ThingBrain : MonoBehaviour
     {
         Debug.Log("saw food");
         detectFood = true;
-        // Go towards food
-        // Need to make it so they turn towards the food
         target = foodLocation;
         Debug.Log("Going towards food!");
         
@@ -62,22 +100,21 @@ public class ThingBrain : MonoBehaviour
     {
         Debug.Log("saw thing");
         detectThing = true;
-        // go away from food
+        // go away from thing
     }
-
 
     // Touch detection
 
-    public void TouchFood()
+    public void TouchFood(int calories)
     {
         Debug.Log("Food!");
+        hunger = hunger + calories;
     }
 
     public void TouchThing()
     {
         Debug.Log("Cuddles!");
     }
-
 
     // Pheremone detctions:
 
